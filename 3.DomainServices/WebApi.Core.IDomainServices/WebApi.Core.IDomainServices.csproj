@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="6.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\4.DataAccess\WebApi.Core.EntityModels\WebApi.Core.EntityModels.csproj" />
+    <ProjectReference Include="..\WebApi.Core.RequestResponseModels\WebApi.Core.RequestResponseModels.csproj" />
+    <ProjectReference Include="..\WebApi.Core.ViewModels\WebApi.Core.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>
