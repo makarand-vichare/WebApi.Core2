@@ -3,12 +3,11 @@ using System;
 
 namespace WebApi.Core.EntityModels.Identity
 {
-    public class Claim : BaseEntity
+    public class Claim : IdentityColumnEntity
     {
         private User _user;
 
         #region Scalar Properties
-        public virtual int ClaimId { get; set; }
         public virtual long UserId { get; set; }
         public virtual string ClaimType { get; set; }
         public virtual string ClaimValue { get; set; }

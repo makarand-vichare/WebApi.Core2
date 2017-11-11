@@ -9,9 +9,9 @@ namespace WebApi.Core.Repositories.Configuration
 
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Claim> builder)
         {
-            builder.ToTable("Claims").HasKey(x => x.ClaimId);
+            builder.ToTable("Claims").HasKey(x => x.Id);
 
-            builder.Property(x => x.ClaimId)
+            builder.Property(x => x.Id)
                 .HasColumnName("ClaimId")
                 .HasColumnType("int")
                 .ValueGeneratedNever()

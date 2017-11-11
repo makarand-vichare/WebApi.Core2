@@ -18,6 +18,8 @@ namespace WebApi.Core.Repositories.Core
         private IRoleRepository _roleRepository;
         private IUserRepository _userRepository;
         private IUserRoleRepository _userRoleRepository;
+        private IClaimRepository _claimRepository;
+
         private IRefreshTokenRepository _refreshTokenRepository;
         private IEmailQueueRepository _emailQueueRepository;
         private IPdfQueueRepository _pdfQueueRepository;
@@ -136,7 +138,6 @@ namespace WebApi.Core.Repositories.Core
             }
         }
 
-
         //[Dependency]
         [SetterProperty]
         public IUserRoleRepository UserRoleRepository
@@ -158,6 +159,18 @@ namespace WebApi.Core.Repositories.Core
             {
                 _userRepository = value;
                 _userRepository.DbContext = dataContext;
+            }
+        }
+
+        //[Dependency]
+        [SetterProperty]
+        public IClaimRepository ClaimRepository
+        {
+            get { return _claimRepository; }
+            set
+            {
+                _claimRepository = value;
+                _claimRepository.DbContext = dataContext;
             }
         }
 

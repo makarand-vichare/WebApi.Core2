@@ -20,6 +20,8 @@ namespace WebApi.Core.IRepositories.Core
         IRoleRepository RoleRepository { get; set; }
         IUserRepository UserRepository { get; set; }
         IUserRoleRepository UserRoleRepository { get; set; }
+        IClaimRepository ClaimRepository { get; set; }
+
         IRefreshTokenRepository RefreshTokenRepository { get; set; }
         IKeyGroupRepository KeyGroupRepository { get; set; }
         ILocalizationKeyRepository LocalizationKeyRepository { get; set; }

@@ -1,22 +1,22 @@
-﻿using WebApi.Core.EntityModels.Identity;
-using WebApi.Core.IDomainServices.AutoMapper;
-using WebApi.Core.IRepositories.Core;
-using WebApi.Core.ServiceResponse;
-using WebApi.Core.ViewModels.Identity.WebApi;
+﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
+using WebApi.Core.EntityModels.Identity;
+using WebApi.Core.IDomainServices.AutoMapper;
+using WebApi.Core.IRepositories.Core;
+using WebApi.Core.ViewModels.Identity.WebApi;
 
 namespace WebApi.Core.DomainServices.IdentityStores
 {
-    public class CustomUserStore : IUserLoginStore<IdentityUserViewModel, long>, 
-        IUserClaimStore<IdentityUserViewModel, long>, 
-        IUserRoleStore<IdentityUserViewModel, long>, 
-        IUserPasswordStore<IdentityUserViewModel, long>, 
-        IUserSecurityStampStore<IdentityUserViewModel, long>, 
-        IUserStore<IdentityUserViewModel, long>, IDisposable 
+    public class CustomUserStore : IUserLoginStore<IdentityUserViewModel>, 
+        IUserClaimStore<IdentityUserViewModel>, 
+        IUserRoleStore<IdentityUserViewModel>, 
+        IUserPasswordStore<IdentityUserViewModel>, 
+        IUserSecurityStampStore<IdentityUserViewModel>, 
+        IUserStore<IdentityUserViewModel>, IDisposable 
     {
         private readonly IUnitOfWork unitOfWork;
 
@@ -26,41 +26,63 @@ namespace WebApi.Core.DomainServices.IdentityStores
         }
 
         #region IUserStore<IdentityUserViewModel, long> Members
-        public Task CreateAsync(IdentityUserViewModel model)
+
+        public Task<string> GetUserIdAsync(IdentityUserViewModel viewModel, CancellationToken cancellationToken)
         {
+            var model = unitOfWork.UserRepository.FindByUserName(viewModel.UserName);
+            return Task.FromResult<string>(model.Id.ToString());
+        }
+
+        public Task<string> GetUserNameAsync(IdentityUserViewModel viewModel, CancellationToken cancellationToken)
+        {
+            var model = unitOfWork.UserRepository.FindById(viewModel.Id);
+            return Task.FromResult<string>(model.UserName);
+        }
+
+        public Task SetUserNameAsync(IdentityUserViewModel viewModel, string userName, CancellationToken cancellationToken)
+        {
+            if (viewModel == null)
+                throw new ArgumentException("user");
+
+            var model = unitOfWork.UserRepository.FindById(viewModel.Id);
             if (model == null)
-                throw new ArgumentNullException("user");
-
-            var viewModel = GetUserModel(model);
-
-            unitOfWork.UserRepository.Add(viewModel);
+                throw new ArgumentException("IdentityUserViewModel does not correspond to a User entity.", "user");
+            model.UserName = userName;
+            unitOfWork.UserRepository.Update(model);
             return unitOfWork.CommitAsync();
         }
 
-        public Task DeleteAsync(IdentityUserViewModel model)
+        public Task<string> GetNormalizedUserNameAsync(IdentityUserViewModel viewModel, CancellationToken cancellationToken)
         {
+            var model = unitOfWork.UserRepository.FindById(viewModel.Id);
+            return Task.FromResult<string>(model.UserName);
+        }
+
+        public Task SetNormalizedUserNameAsync(IdentityUserViewModel viewModel, string normalizedName, CancellationToken cancellationToken)
+        {
+            if (viewModel == null)
+                throw new ArgumentException("user");
+
+            var model = unitOfWork.UserRepository.FindById(viewModel.Id);
             if (model == null)
-                throw new ArgumentNullException("user");
-
-            var viewModel = GetUserModel(model);
-
-            unitOfWork.UserRepository.Delete(viewModel);
+                throw new ArgumentException("IdentityUserViewModel does not correspond to a User entity.", "user");
+            model.UserName = normalizedName;
+            unitOfWork.UserRepository.Update(model);
             return unitOfWork.CommitAsync();
         }
 
-        public Task<IdentityUserViewModel> FindByIdAsync(long userId)
+        public Task<IdentityResult> CreateAsync(IdentityUserViewModel viewModel, CancellationToken cancellationToken)
         {
-            var model = unitOfWork.UserRepository.FindById(userId);
-            return Task.FromResult<IdentityUserViewModel>(GetIdentityUserViewModel(model));
+            if (viewModel == null)
+                throw new ArgumentNullException("user");
+
+            var model = GetUserModel(viewModel);
+            unitOfWork.UserRepository.Add(model);
+            var result = unitOfWork.CommitAsync().Result;
+            return result > 0 ? Task.FromResult(IdentityResult.Success) : Task.FromResult(new IdentityResult { });
         }
 
-        public Task<IdentityUserViewModel> FindByNameAsync(string userName)
-        {
-            var model = unitOfWork.UserRepository.FindByUserName(userName);
-            return Task.FromResult<IdentityUserViewModel>(GetIdentityUserViewModel(model));
-        }
-
-        public Task UpdateAsync(IdentityUserViewModel viewModel)
+        public Task<IdentityResult> UpdateAsync(IdentityUserViewModel viewModel, CancellationToken cancellationToken)
         {
             if (viewModel == null)
                 throw new ArgumentException("user");
@@ -70,35 +92,39 @@ namespace WebApi.Core.DomainServices.IdentityStores
                 throw new ArgumentException("IdentityUserViewModel does not correspond to a User entity.", "user");
 
             unitOfWork.UserRepository.Update(model);
-            return unitOfWork.CommitAsync();
+            var result = unitOfWork.CommitAsync().Result;
+            return result > 0 ? Task.FromResult(IdentityResult.Success) : Task.FromResult(new IdentityResult { });
         }
-        #endregion
 
-        #region IUserClaimStore<IdentityUserViewModel, long> Members
-        public Task AddClaimAsync(IdentityUserViewModel viewModel, System.Security.Claims.Claim claim)
+        public Task<IdentityResult> DeleteAsync(IdentityUserViewModel viewModel, CancellationToken cancellationToken)
         {
             if (viewModel == null)
                 throw new ArgumentNullException("user");
-            if (claim == null)
-                throw new ArgumentNullException("claim");
 
-            var model = unitOfWork.UserRepository.FindById(viewModel.Id);
-            if (model == null)
-                throw new ArgumentException("IdentityUserViewModel does not correspond to a User entity.", "user");
+            var model = GetUserModel(viewModel);
 
-            var claimEntityModel = new EntityModels.Identity.Claim
-            {
-                ClaimType = claim.Type,
-                ClaimValue = claim.Value,
-                User = model
-            };
-            model.Claims.Add(claimEntityModel);
-
-            unitOfWork.UserRepository.Update(model);
-            return unitOfWork.CommitAsync();
+            unitOfWork.UserRepository.Delete(model);
+            var result = unitOfWork.CommitAsync().Result;
+            return result > 0 ? Task.FromResult(IdentityResult.Success) : Task.FromResult(new IdentityResult { });
         }
 
-        public Task<IList<System.Security.Claims.Claim>> GetClaimsAsync(IdentityUserViewModel viewModel)
+        public Task<IdentityUserViewModel> FindByIdAsync(string userId, CancellationToken cancellationToken)
+        {
+            var model = unitOfWork.UserRepository.FindById(userId);
+            return Task.FromResult<IdentityUserViewModel>(GetIdentityUserViewModel(model));
+        }
+
+        public Task<IdentityUserViewModel> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        {
+            var model = unitOfWork.UserRepository.FindByUserName(normalizedUserName);
+            return Task.FromResult<IdentityUserViewModel>(GetIdentityUserViewModel(model));
+        }
+
+        #endregion
+
+        #region IUserClaimStore<IdentityUserViewModel, long> Members
+
+        public Task<IList<System.Security.Claims.Claim>> GetClaimsAsync(IdentityUserViewModel viewModel, CancellationToken cancellationToken)
         {
             if (viewModel == null)
                 throw new ArgumentNullException("user");
@@ -110,27 +136,104 @@ namespace WebApi.Core.DomainServices.IdentityStores
             return Task.FromResult<IList<System.Security.Claims.Claim>>(model.Claims.Select(x => new System.Security.Claims.Claim(x.ClaimType, x.ClaimValue)).ToList());
         }
 
-        public Task RemoveClaimAsync(IdentityUserViewModel viewModel, System.Security.Claims.Claim claim)
+        public Task AddClaimsAsync(IdentityUserViewModel viewModel, IEnumerable<System.Security.Claims.Claim> claims, CancellationToken cancellationToken)
         {
             if (viewModel == null)
                 throw new ArgumentNullException("user");
-            if (claim == null)
+            if (claims == null)
                 throw new ArgumentNullException("claim");
 
             var model = unitOfWork.UserRepository.FindById(viewModel.Id);
             if (model == null)
                 throw new ArgumentException("IdentityUserViewModel does not correspond to a User entity.", "user");
 
-            var claimEntityModel = model.Claims.FirstOrDefault(x => x.ClaimType == claim.Type && x.ClaimValue == claim.Value);
-            model.Claims.Remove(claimEntityModel);
+            foreach (var claim in claims)
+            {
+                var claimEntityModel = new EntityModels.Identity.Claim
+                {
+                    ClaimType = claim.Type,
+                    ClaimValue = claim.Value,
+                    User = model
+                };
+                model.Claims.Add(claimEntityModel);
+            }
 
             unitOfWork.UserRepository.Update(model);
             return unitOfWork.CommitAsync();
         }
+
+        public Task ReplaceClaimAsync(IdentityUserViewModel viewModel, System.Security.Claims.Claim claim, System.Security.Claims.Claim newClaim, CancellationToken cancellationToken)
+        {
+            if (viewModel == null)
+                throw new ArgumentNullException("user");
+            if (claim == null || newClaim == null)
+                throw new ArgumentNullException("claim");
+
+            var model = unitOfWork.UserRepository.FindById(viewModel.Id);
+            if (model == null)
+                throw new ArgumentException("IdentityUserViewModel does not correspond to a User entity.", "user");
+
+            var claimEntityModel = new EntityModels.Identity.Claim
+            {
+                ClaimType = newClaim.Type,
+                ClaimValue = newClaim.Value,
+                User = model
+            };
+
+            var existingClaims = model.Claims.Where(o => o.ClaimType == claim.Type && o.ClaimValue == claim.Value).ToList();
+            if (existingClaims != null && existingClaims.Count >0)
+            {
+                foreach (var oldClaim in existingClaims)
+                {
+                    model.Claims.Remove(oldClaim);
+                }
+            }
+
+            model.Claims.Add(claimEntityModel);
+
+            unitOfWork.UserRepository.Update(model);
+            return unitOfWork.CommitAsync();
+        }
+
+        public Task RemoveClaimsAsync(IdentityUserViewModel viewModel, IEnumerable<System.Security.Claims.Claim> claims, CancellationToken cancellationToken)
+        {
+            if (viewModel == null)
+                throw new ArgumentNullException("user");
+            if (claims == null)
+                throw new ArgumentNullException("claim");
+
+            var model = unitOfWork.UserRepository.FindById(viewModel.Id);
+            if (model == null)
+                throw new ArgumentException("IdentityUserViewModel does not correspond to a User entity.", "user");
+
+            foreach (var claim in claims)
+            {
+                var claimEntityModel = model.Claims.FirstOrDefault(x => x.ClaimType == claim.Type && x.ClaimValue == claim.Value);
+                model.Claims.Remove(claimEntityModel);
+            }
+
+            unitOfWork.UserRepository.Update(model);
+            return unitOfWork.CommitAsync();
+        }
+
+        public Task<IList<IdentityUserViewModel>> GetUsersForClaimAsync(System.Security.Claims.Claim claim, CancellationToken cancellationToken)
+        {
+            if (claim == null)
+                throw new ArgumentNullException("user");
+
+            var ids = unitOfWork.ClaimRepository.GetUserIdsByClaim(claim);
+            if (ids == null)
+                throw new ArgumentException("IdentityUserViewModel does not correspond to a User entity.", "user");
+
+            var users = unitOfWork.UserRepository.GetMany(o => ids.Contains(o.Id)).ToViewModel<User,IdentityUserViewModel>().ToList();
+            return Task.FromResult<IList<IdentityUserViewModel>>(users);
+        }
+
         #endregion
 
         #region IUserLoginStore<IdentityUserViewModel, long> Members
-        public Task AddLoginAsync(IdentityUserViewModel viewModel, UserLoginInfo login)
+
+        public Task AddLoginAsync(IdentityUserViewModel viewModel, UserLoginInfo login, CancellationToken cancellationToken)
         {
             if (viewModel == null)
                 throw new ArgumentNullException("user");
@@ -153,53 +256,52 @@ namespace WebApi.Core.DomainServices.IdentityStores
             return unitOfWork.CommitAsync();
         }
 
-        public Task<IdentityUserViewModel> FindAsync(UserLoginInfo login)
+        public Task RemoveLoginAsync(IdentityUserViewModel viewModel, string loginProvider, string providerKey, CancellationToken cancellationToken)
         {
-            if (login == null)
+            if (viewModel == null)
+                throw new ArgumentNullException("user");
+            if (loginProvider == null)
                 throw new ArgumentNullException("login");
 
+            var model = unitOfWork.UserRepository.FindById(viewModel.Id);
+            if (model == null)
+                throw new ArgumentException("IdentityUserViewModel does not correspond to a User entity.", "user");
+
+            var loginModel = model.Logins.FirstOrDefault(x => x.LoginProvider == loginProvider && x.ProviderKey == providerKey);
+            model.Logins.Remove(loginModel);
+
+            unitOfWork.UserRepository.Update(model);
+            return unitOfWork.CommitAsync();
+        }
+
+        public Task<IList<UserLoginInfo>> GetLoginsAsync(IdentityUserViewModel viewModel, CancellationToken cancellationToken)
+        {
+            if (viewModel == null)
+                throw new ArgumentNullException("user");
+
+            var model = unitOfWork.UserRepository.FindById(viewModel.Id);
+            if (model == null)
+                throw new ArgumentException("IdentityUserViewModel does not correspond to a User entity.", "user");
+
+            return Task.FromResult<IList<UserLoginInfo>>(model.Logins.Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey,x.User.UserName)).ToList());
+        }
+
+        public Task<IdentityUserViewModel> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
+        {
             var identityUser = default(IdentityUserViewModel);
 
-            var externalLoginEntityModel = unitOfWork.ExternalLoginRepository.GetByProviderAndKey(login.LoginProvider, login.ProviderKey);
+            var externalLoginEntityModel = unitOfWork.ExternalLoginRepository.GetByProviderAndKey(loginProvider, providerKey);
             if (externalLoginEntityModel != null)
                 identityUser = GetIdentityUserViewModel(externalLoginEntityModel.User);
 
             return Task.FromResult<IdentityUserViewModel>(identityUser);
         }
 
-        public Task<IList<UserLoginInfo>> GetLoginsAsync(IdentityUserViewModel viewModel)
-        {
-            if (viewModel == null)
-                throw new ArgumentNullException("user");
-
-            var model = unitOfWork.UserRepository.FindById(viewModel.Id);
-            if (model == null)
-                throw new ArgumentException("IdentityUserViewModel does not correspond to a User entity.", "user");
-
-            return Task.FromResult<IList<UserLoginInfo>>(model.Logins.Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey)).ToList());
-        }
-
-        public Task RemoveLoginAsync(IdentityUserViewModel viewModel, UserLoginInfo login)
-        {
-            if (viewModel == null)
-                throw new ArgumentNullException("user");
-            if (login == null)
-                throw new ArgumentNullException("login");
-
-            var model = unitOfWork.UserRepository.FindById(viewModel.Id);
-            if (model == null)
-                throw new ArgumentException("IdentityUserViewModel does not correspond to a User entity.", "user");
-
-            var loginModel = model.Logins.FirstOrDefault(x => x.LoginProvider == login.LoginProvider && x.ProviderKey == login.ProviderKey);
-            model.Logins.Remove(loginModel);
-
-            unitOfWork.UserRepository.Update(model);
-            return unitOfWork.CommitAsync();
-        }
         #endregion
 
         #region IUserRoleStore<IdentityUserViewModel, long> Members
-        public Task AddToRoleAsync(IdentityUserViewModel viewModel, string roleName)
+
+        public Task AddToRoleAsync(IdentityUserViewModel viewModel, string roleName, CancellationToken cancellationToken)
         {
             if (viewModel == null)
                 throw new ArgumentNullException("user");
@@ -213,44 +315,13 @@ namespace WebApi.Core.DomainServices.IdentityStores
             if (roleEntityModel == null)
                 throw new ArgumentException("roleName does not correspond to a Role entity.", "roleName");
 
-            model.UserRoles.Add(new UserRole { UserId = viewModel.Id, RoleId= roleEntityModel.Id });
+            model.UserRoles.Add(new UserRole { UserId = viewModel.Id, RoleId = roleEntityModel.Id });
             unitOfWork.UserRepository.Update(model);
 
             return unitOfWork.CommitAsync();
         }
 
-        public Task<IList<string>> GetRolesAsync(IdentityUserViewModel viewModel)
-        {
-            if (viewModel == null)
-                throw new ArgumentNullException("user");
-
-            var model = unitOfWork.UserRepository.FindById(viewModel.Id);
-            if (model == null)
-                throw new ArgumentException("IdentityUserViewModel does not correspond to a User entity.", "user");
-
-            var ids = model.UserRoles.Select(o => o.RoleId);
-            var list = unitOfWork.RoleRepository.GetMany(o=> ids.Contains(o.Id));
-            return Task.FromResult<IList<string>>(list.Select(x => x.Name).ToList());
-        }
-
-        public Task<bool> IsInRoleAsync(IdentityUserViewModel viewModel, string roleName)
-        {
-            if (viewModel == null)
-                throw new ArgumentNullException("user");
-            if (string.IsNullOrWhiteSpace(roleName))
-                throw new ArgumentException("Argument cannot be null, empty, or whitespace: role.");
-
-            var model = unitOfWork.UserRepository.FindById(viewModel.Id);
-            if (model == null)
-                throw new ArgumentException("IdentityUserViewModel does not correspond to a User entity.", "user");
-
-            var ids = model.UserRoles.Select(o => o.RoleId);
-            var list = unitOfWork.RoleRepository.GetMany(o => ids.Contains(o.Id));
-
-            return Task.FromResult<bool>(list.Any(x => x.Name == roleName));
-        }
-
-        public Task RemoveFromRoleAsync(IdentityUserViewModel viewModel, string roleName)
+        public Task RemoveFromRoleAsync(IdentityUserViewModel viewModel, string roleName, CancellationToken cancellationToken)
         {
             if (viewModel == null)
                 throw new ArgumentNullException("user");
@@ -268,43 +339,88 @@ namespace WebApi.Core.DomainServices.IdentityStores
             unitOfWork.UserRepository.Update(model);
             return unitOfWork.CommitAsync();
         }
+
+        public Task<IList<string>> GetRolesAsync(IdentityUserViewModel viewModel, CancellationToken cancellationToken)
+        {
+            if (viewModel == null)
+                throw new ArgumentNullException("user");
+
+            var model = unitOfWork.UserRepository.FindById(viewModel.Id);
+            if (model == null)
+                throw new ArgumentException("IdentityUserViewModel does not correspond to a User entity.", "user");
+
+            var ids = model.UserRoles.Select(o => o.RoleId);
+            var list = unitOfWork.RoleRepository.GetMany(o => ids.Contains(o.Id));
+            return Task.FromResult<IList<string>>(list.Select(x => x.Name).ToList());
+        }
+
+        public Task<bool> IsInRoleAsync(IdentityUserViewModel viewModel, string roleName, CancellationToken cancellationToken)
+        {
+            if (viewModel == null)
+                throw new ArgumentNullException("user");
+            if (string.IsNullOrWhiteSpace(roleName))
+                throw new ArgumentException("Argument cannot be null, empty, or whitespace: role.");
+
+            var model = unitOfWork.UserRepository.FindById(viewModel.Id);
+            if (model == null)
+                throw new ArgumentException("IdentityUserViewModel does not correspond to a User entity.", "user");
+
+            var ids = model.UserRoles.Select(o => o.RoleId);
+            var list = unitOfWork.RoleRepository.GetMany(o => ids.Contains(o.Id));
+
+            return Task.FromResult<bool>(list.Any(x => x.Name == roleName));
+        }
+
+        public Task<IList<IdentityUserViewModel>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
+        {
+            var model = unitOfWork.RoleRepository.FindByName(roleName);
+            if (model == null)
+                throw new ArgumentException("IdentityRoleViewModel does not correspond to a Role entity.", "roleName");
+
+            var ids = model.UserRoles.Select(o => o.UserId);
+            IList<IdentityUserViewModel> list = unitOfWork.UserRepository.GetMany(o => ids.Contains(o.Id)).ToViewModel<User,IdentityUserViewModel>().ToList();
+            return Task.FromResult(list);
+        }
+
         #endregion
 
         #region IUserPasswordStore<IdentityUserViewModel, long> Members
-        public Task<string> GetPasswordHashAsync(IdentityUserViewModel viewModel)
+        public Task<string> GetPasswordHashAsync(IdentityUserViewModel viewModel, CancellationToken cancellationToken)
         {
             if (viewModel == null)
                 throw new ArgumentNullException("user");
             return Task.FromResult<string>(viewModel.PasswordHash);
         }
 
-        public Task<bool> HasPasswordAsync(IdentityUserViewModel viewModel)
+        public Task<bool> HasPasswordAsync(IdentityUserViewModel viewModel, CancellationToken cancellationToken)
         {
             if (viewModel == null)
                 throw new ArgumentNullException("user");
             return Task.FromResult<bool>(!string.IsNullOrWhiteSpace(viewModel.PasswordHash));
         }
 
-        public Task SetPasswordHashAsync(IdentityUserViewModel viewModel, string passwordHash)
+        public Task SetPasswordHashAsync(IdentityUserViewModel viewModel, string passwordHash, CancellationToken cancellationToken)
         {
             viewModel.PasswordHash = passwordHash;
             return Task.FromResult(0);
         }
+
         #endregion
 
         #region IUserSecurityStampStore<IdentityUserViewModel, long> Members
-        public Task<string> GetSecurityStampAsync(IdentityUserViewModel viewModel)
+        public Task<string> GetSecurityStampAsync(IdentityUserViewModel viewModel, CancellationToken cancellationToken)
         {
             if (viewModel == null)
                 throw new ArgumentNullException("user");
             return Task.FromResult<string>(viewModel.SecurityStamp);
         }
 
-        public Task SetSecurityStampAsync(IdentityUserViewModel viewModel, string stamp)
+        public Task SetSecurityStampAsync(IdentityUserViewModel viewModel, string stamp, CancellationToken cancellationToken)
         {
             viewModel.SecurityStamp = stamp;
             return Task.FromResult(0);
         }
+
         #endregion
 
         #region Private Methods
@@ -361,20 +477,6 @@ namespace WebApi.Core.DomainServices.IdentityStores
             // GC.SuppressFinalize(this);
         }
 
-        public ResponseResults<RefreshTokenViewModel> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public ResponseResult<RefreshTokenViewModel> GetById(long id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ResponseResult<RefreshTokenViewModel> Save(RefreshTokenViewModel viewModel)
-        {
-            throw new NotImplementedException();
-        }
         #endregion
         #endregion
     }

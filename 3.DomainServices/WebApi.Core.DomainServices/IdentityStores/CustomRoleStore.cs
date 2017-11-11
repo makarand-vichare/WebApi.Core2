@@ -1,75 +1,22 @@
-﻿using WebApi.Core.EntityModels.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using WebApi.Core.EntityModels.Identity;
 using WebApi.Core.IDomainServices.AutoMapper;
 using WebApi.Core.IRepositories.Core;
 using WebApi.Core.ViewModels.Identity.WebApi;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
 
 namespace WebApi.Core.DomainServices.IdentityStores
 {
-    public class CustomRoleStore :  IRoleStore<IdentityRoleViewModel, long>, IQueryableRoleStore<IdentityRoleViewModel, long>, IDisposable
+    public class CustomRoleStore :  IRoleStore<IdentityRoleViewModel>, IQueryableRoleStore<IdentityRoleViewModel>, IDisposable
     {
         private readonly IUnitOfWork unitOfWork;
 
         public CustomRoleStore(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
-        }
-
-        public Task CreateAsync(IdentityRoleViewModel viewModel)
-        {
-            if (viewModel == null)
-                throw new ArgumentNullException("role");
-
-            var model = GetRoleModel(viewModel);
-
-            unitOfWork.RoleRepository.Add(model);
-            return unitOfWork.CommitAsync();
-        }
-
-        public Task UpdateAsync(IdentityRoleViewModel viewModel)
-        {
-            if (viewModel == null)
-                throw new ArgumentException("role");
-
-            var model = unitOfWork.RoleRepository.FindById(viewModel.Id);
-            if (model == null)
-                throw new ArgumentException("IdentityRoleViewModel does not correspond to a Role entity.", "role");
-
-            model = viewModel.ToEntityModel<Role, IdentityRoleViewModel>();
-
-            unitOfWork.RoleRepository.Update(model);
-            return unitOfWork.CommitAsync();
-        }
-
-        public Task DeleteAsync(IdentityRoleViewModel viewModel)
-        {
-            if (viewModel == null)
-                throw new ArgumentNullException("GetRole");
-
-            var model = GetRoleModel(viewModel);
-
-            unitOfWork.RoleRepository.Delete(model);
-            return unitOfWork.CommitAsync();
-        }
-
-        public Task<IdentityRoleViewModel> FindByIdAsync(long roleId)
-        {
-            var model = unitOfWork.RoleRepository.FindById(roleId);
-
-            var viewModel = model.ToViewModel<Role, IdentityRoleViewModel>();
-
-            return Task.FromResult<IdentityRoleViewModel>(viewModel);
-        }
-
-        public Task<IdentityRoleViewModel> FindByNameAsync(string roleName)
-        {
-            var model = unitOfWork.RoleRepository.FindByName(roleName);
-            var viewModel = model.ToViewModel<Role, IdentityRoleViewModel>();
-
-            return Task.FromResult<IdentityRoleViewModel>(viewModel);
         }
 
         public IQueryable<IdentityRoleViewModel> Roles
@@ -81,6 +28,120 @@ namespace WebApi.Core.DomainServices.IdentityStores
                     .Select(x => GetIdentityRoleViewModel(x))
                     .AsQueryable();
             }
+        }
+
+        public Task<IdentityResult> CreateAsync(IdentityRoleViewModel viewModel, CancellationToken cancellationToken)
+        {
+            if (viewModel == null)
+                throw new ArgumentNullException("role");
+
+            var model = GetRoleModel(viewModel);
+
+            unitOfWork.RoleRepository.Add(model);
+          
+            var result = unitOfWork.CommitAsync().Result;
+            return result > 0 ? Task.FromResult(IdentityResult.Success) : Task.FromResult(new IdentityResult { });
+
+        }
+
+        public Task<IdentityResult> UpdateAsync(IdentityRoleViewModel viewModel, CancellationToken cancellationToken)
+        {
+            if (viewModel == null)
+                throw new ArgumentException("role");
+
+            var model = unitOfWork.RoleRepository.FindById(viewModel.Id);
+            if (model == null)
+                throw new ArgumentException("IdentityRoleViewModel does not correspond to a Role entity.", "role");
+
+            model = viewModel.ToEntityModel<Role, IdentityRoleViewModel>();
+
+            unitOfWork.RoleRepository.Update(model);
+            var result = unitOfWork.CommitAsync().Result;
+            return result > 0 ? Task.FromResult(IdentityResult.Success) : Task.FromResult(new IdentityResult { });
+        }
+
+        public Task<IdentityResult> DeleteAsync(IdentityRoleViewModel viewModel, CancellationToken cancellationToken)
+        {
+            if (viewModel == null)
+                throw new ArgumentNullException("GetRole");
+
+            var model = GetRoleModel(viewModel);
+
+            unitOfWork.RoleRepository.Delete(model);
+            var result = unitOfWork.CommitAsync().Result;
+            return result > 0 ? Task.FromResult(IdentityResult.Success) : Task.FromResult(new IdentityResult { });
+        }
+
+        public Task<string> GetRoleIdAsync(IdentityRoleViewModel viewModel, CancellationToken cancellationToken)
+        {
+            var model = unitOfWork.RoleRepository.FindById(viewModel.Id);
+
+            //var viewModel = model.ToViewModel<Role, IdentityRoleViewModel>();
+
+            return Task.FromResult<string>(model.Name);
+        }
+
+        public Task<string> GetRoleNameAsync(IdentityRoleViewModel viewModel, CancellationToken cancellationToken)
+        {
+            var model = unitOfWork.RoleRepository.FindByName(viewModel.Name);
+          //  var viewModel = model.ToViewModel<Role, IdentityRoleViewModel>();
+            return Task.FromResult<string>(model.Name);
+        }
+
+        public Task SetRoleNameAsync(IdentityRoleViewModel viewModel, string roleName, CancellationToken cancellationToken)
+        {
+            if (viewModel == null)
+                throw new ArgumentException("role");
+
+            var model = unitOfWork.RoleRepository.FindById(viewModel.Id);
+            viewModel.Name = roleName;
+            if (model == null)
+                throw new ArgumentException("IdentityRoleViewModel does not correspond to a Role entity.", "role");
+
+            model = viewModel.ToEntityModel<Role, IdentityRoleViewModel>();
+
+            unitOfWork.RoleRepository.Update(model);
+            return unitOfWork.CommitAsync();
+        }
+
+        public Task<string> GetNormalizedRoleNameAsync(IdentityRoleViewModel viewModel, CancellationToken cancellationToken)
+        {
+            var model = unitOfWork.RoleRepository.FindById(viewModel.Id);
+            //  var viewModel = model.ToViewModel<Role, IdentityRoleViewModel>();
+            return Task.FromResult<string>(model.Name);
+        }
+
+        public Task SetNormalizedRoleNameAsync(IdentityRoleViewModel viewModel, string normalizedName, CancellationToken cancellationToken)
+        {
+            if (viewModel == null)
+                throw new ArgumentException("role");
+
+            var model = unitOfWork.RoleRepository.FindById(viewModel.Id);
+            viewModel.Name = normalizedName;
+            if (model == null)
+                throw new ArgumentException("IdentityRoleViewModel does not correspond to a Role entity.", "role");
+
+            model = viewModel.ToEntityModel<Role, IdentityRoleViewModel>();
+
+            unitOfWork.RoleRepository.Update(model);
+            return unitOfWork.CommitAsync();
+        }
+
+        public Task<IdentityRoleViewModel> FindByIdAsync(string roleId, CancellationToken cancellationToken)
+        {
+            var model = unitOfWork.RoleRepository.FindById(roleId);
+
+            var viewModel = model.ToViewModel<Role, IdentityRoleViewModel>();
+
+            return Task.FromResult<IdentityRoleViewModel>(viewModel);
+        }
+
+        public Task<IdentityRoleViewModel> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
+        {
+            var model = unitOfWork.RoleRepository.FindByName(normalizedRoleName);
+            var viewModel = model.ToViewModel<Role, IdentityRoleViewModel>();
+
+            return Task.FromResult<IdentityRoleViewModel>(viewModel);
         }
 
         #region private methods
@@ -137,6 +198,7 @@ namespace WebApi.Core.DomainServices.IdentityStores
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
         }
+
         #endregion
     }
 }

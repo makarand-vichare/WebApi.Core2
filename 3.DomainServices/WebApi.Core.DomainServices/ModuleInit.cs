@@ -5,7 +5,7 @@ using WebApi.Core.ViewModels.Identity.WebApi;
 using WebApi.Core.IDomainServices.Services;
 using WebApi.Core.Common.MEF;
 using System.Composition;
-using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebApi.Core.DomainServices
 {
@@ -14,8 +14,8 @@ namespace WebApi.Core.DomainServices
     {
         public void Initialize(IModuleRegistrar registrar)
         {
-            registrar.RegisterType(typeof(IUserStore<IdentityUserViewModel, long>), typeof(CustomUserStore));
-            registrar.RegisterType(typeof(IRoleStore<IdentityRoleViewModel, long>), typeof(CustomRoleStore));
+            registrar.RegisterType(typeof(IUserStore<IdentityUserViewModel>), typeof(CustomUserStore));
+            registrar.RegisterType(typeof(IRoleStore<IdentityRoleViewModel>), typeof(CustomRoleStore));
 
             registrar.RegisterType<IEmailQueueService, EmailQueueService>();
             registrar.RegisterType<IPdfQueueService, PdfQueueService>();

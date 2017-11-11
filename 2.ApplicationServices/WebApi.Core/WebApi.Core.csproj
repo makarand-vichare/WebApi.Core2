@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" />
+    <PackageReference Include="StructureMap.Microsoft.DependencyInjection" Version="1.4.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,6 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\3.DomainServices\WebApi.Core.DomainServices\WebApi.Core.DomainServices.csproj" />
+    <ProjectReference Include="..\..\3.DomainServices\WebApi.Core.IDomainServices\WebApi.Core.IDomainServices.csproj" />
+    <ProjectReference Include="..\..\3.DomainServices\WebApi.Core.ViewModels\WebApi.Core.ViewModels.csproj" />
+    <ProjectReference Include="..\..\4.DataAccess\WebApi.Core.IRepositories\WebApi.Core.IRepositories.csproj" />
     <ProjectReference Include="..\..\4.DataAccess\WebApi.Core.Repositories\WebApi.Core.Repositories.csproj" />
   </ItemGroup>
 

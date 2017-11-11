@@ -13,7 +13,10 @@ namespace WebApi.Core.Common.MEF
     {
         public static void LoadContainer(StructureMap.IContainer container, string path, string pattern)
         {
-            var assemblies = Directory.GetFiles(path, pattern).Select(AssemblyLoadContext.Default.LoadFromAssemblyPath);
+            var assemblies = Directory.GetFiles(path, pattern)
+                                .Select(AssemblyLoadContext.GetAssemblyName)
+                                .Select(AssemblyLoadContext.Default.LoadFromAssemblyName)
+                                .ToList(); 
 
             var configuration = new ContainerConfiguration().WithAssemblies(assemblies);
             try
