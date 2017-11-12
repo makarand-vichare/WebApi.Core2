@@ -12,8 +12,7 @@ namespace WebApi.Core.Repositories.Configuration
 
                 builder.Property(x => x.ClientId)
                 .HasColumnName("ClientId")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(200)
+                .HasColumnType("nvarchar(200)")
                 .IsRequired();
 
             builder.Property(x => x.Id)
@@ -24,13 +23,12 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.Secret)
                 .HasColumnName("Secret")
-                .HasColumnType("nvarchar")
+                .HasColumnType("nvarchar(MAX)")
                 .IsRequired();
 
             builder.Property(x => x.Name)
                 .HasColumnName("Name")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(100)
+                .HasColumnType("nvarchar(100)")
                 .IsRequired();
 
             builder.Property(x => x.ApplicationType)
@@ -50,8 +48,7 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.AllowedOrigin)
                 .HasColumnName("AllowedOrigin")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(200)
+                .HasColumnType("nvarchar(200)")
                 .IsRequired();
 
             builder.HasMany(x => x.RefreshTokens)

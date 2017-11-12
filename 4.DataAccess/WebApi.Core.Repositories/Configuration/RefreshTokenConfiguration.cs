@@ -17,19 +17,17 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.TokenId)
                 .HasColumnName("TokenId")
-                .HasColumnType("nvarchar")
+                .HasColumnType("nvarchar(MAX)")
                 .IsRequired();
 
             builder.Property(x => x.Subject)
                 .HasColumnName("Subject")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(100)
+                .HasColumnType("nvarchar(100)")
                 .IsRequired();
 
             builder.Property(x => x.ClientId)
                 .HasColumnName("ClientId")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(200)
+                .HasColumnType("nvarchar(200)")
                 .IsRequired();
 
             builder.Property(x => x.IssuedUtc)
@@ -44,7 +42,7 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.ProtectedTicket)
                 .HasColumnName("ProtectedTicket")
-                .HasColumnType("nvarchar")
+                .HasColumnType("nvarchar(MAX)")
                 .IsRequired();
 
             builder.HasOne(x => x.Client)

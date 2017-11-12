@@ -4,11 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StructureMap;
 using System;
-using WebApi.Core.DomainServices;
-using WebApi.Core.IDomainServices.Services;
-using WebApi.Core.IOC;
-using WebApi.Core.IRepositories.Location;
-using WebApi.Core.Repositories.Location;
 
 namespace WebApi.Core
 {
@@ -21,11 +16,10 @@ namespace WebApi.Core
             Configuration = configuration;
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables();
 
-            builder.AddEnvironmentVariables();
             Configuration = builder.Build();
             hostingEnvironment = env;
         }
@@ -52,12 +46,6 @@ namespace WebApi.Core
 
             // Configure the IoC container
             return ConfigureIoC(services);
-
-            //services.AddDbContext<DataContext>(options =>
-            //{
-            //    Environment.SetEnvironmentVariable("EnvironmentName", hostingEnvironment.EnvironmentName.ToLower() == "development" ? "local" : hostingEnvironment.EnvironmentName);
-            //    options.UseSqlServer(Configuration.GetConnectionString("DalSoftDbContext"));
-            //});
 
         }
 
@@ -88,9 +76,7 @@ namespace WebApi.Core
                 config.Scan(_ =>
                 {
                     _.AssemblyContainingType(typeof(Startup));
-                    _.AssembliesFromPath(".\\bin\\Debug\\netcoreapp2.0", o => {                       
-                        return o.FullName.Contains("WebApi.Core.") && o.FullName.EndsWith(".dll");
-                    });
+                    _.AssembliesFromPath(".\\bin\\Debug\\netcoreapp2.0");
                     _.WithDefaultConventions();
                 });
                 //config.For<ICountryService>().Use<CountryService>();

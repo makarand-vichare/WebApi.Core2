@@ -17,20 +17,17 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.LocalizationKeyCode)
                 .HasColumnName("LocalizationKey")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(256)
+                .HasColumnType("nvarchar(256)")
                 .IsRequired();
 
             builder.Property(x => x.EnglishValue)
                 .HasColumnName("EnglishValue")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(5000)
+                .HasColumnType("nvarchar(MAX)")
                 .IsRequired();
 
             builder.Property(x => x.IrishValue)
                 .HasColumnName("IrishValue")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(5000)
+                .HasColumnType("nvarchar(MAX)")
                 .IsRequired();
 
             builder.Property(x => x.IsActive)

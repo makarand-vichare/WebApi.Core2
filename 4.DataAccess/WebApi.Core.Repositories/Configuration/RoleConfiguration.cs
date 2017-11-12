@@ -18,7 +18,7 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.Name)
                 .HasColumnName("Name")
-                .HasColumnType("nvarchar")
+                .HasColumnType("nvarchar(256)")
                 .HasMaxLength(256)
                 .IsRequired();
         }

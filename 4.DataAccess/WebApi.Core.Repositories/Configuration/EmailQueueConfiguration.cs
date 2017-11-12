@@ -18,27 +18,27 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.FromEmailId)
                 .HasColumnName("FromEmailId")
-                .HasColumnType("nvarchar")
+                .HasColumnType("nvarchar(500)")
                 .IsRequired();
 
             builder.Property(x => x.ToEmailId)
                 .HasColumnName("ToEmailId")
-                .HasColumnType("nvarchar")
+                .HasColumnType("nvarchar(500)")
                 .IsRequired();
 
             builder.Property(x => x.EmailSubject)
                 .HasColumnName("EmailSubject")
-                .HasColumnType("nvarchar")
+                .HasColumnType("nvarchar(500)")
                 .IsRequired();
 
             builder.Property(x => x.MessageBody)
                 .HasColumnName("MessageBody")
-                .HasColumnType("nvarchar")
+                .HasColumnType("nvarchar(MAX)")
                 .IsRequired();
 
             builder.Property(x => x.AttachedFiles)
                 .HasColumnName("AttachedFiles")
-                .HasColumnType("nvarchar");
+                .HasColumnType("nvarchar(MAX)");
 
             builder.Property(x => x.IsSucceedEmailSent)
                 .HasColumnName("IsSucceedEmailSent")
@@ -47,7 +47,7 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.ErrorMessage)
                 .HasColumnName("ErrorMessage")
-                .HasColumnType("nvarchar");
+                .HasColumnType("nvarchar(MAX)");
         }
     }
 }

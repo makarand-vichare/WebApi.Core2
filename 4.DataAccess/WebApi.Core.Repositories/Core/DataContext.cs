@@ -17,6 +17,9 @@ namespace WebApi.Core.Repositories.Core
 {
     public class DataContext : DbContext, IDataContext
     {
+        public DataContext(DbContextOptions options) : base(options) { }
+        public DataContext() { }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<ExternalLogin> Logins { get; set; }
@@ -34,10 +37,6 @@ namespace WebApi.Core.Repositories.Core
         public DbSet<RequestQueue> RequestQueues { get; set; }
         public DbSet<PdfQueue> PdfQueues { get; set; }
         public DbSet<EmailQueue> EmailQueues { get; set; }
-
-        public DataContext(DbContextOptions options) : base(options) { }
-        public DataContext() { }
-
 
         public virtual DbSet<T> DbSet<T>() where T : BaseEntity
         {
@@ -92,14 +91,13 @@ namespace WebApi.Core.Repositories.Core
             if (optionsBuilder.IsConfigured) return;
 
             //Called by parameterless ctor Usually Migrations
-            var environmentName = Environment.GetEnvironmentVariable("EnvironmentName") ?? "local";
 
-            optionsBuilder.UseSqlServer(
-                new ConfigurationBuilder().SetBasePath(Path.GetDirectoryName(path: GetType().GetTypeInfo().Assembly.Location))
-                    .AddJsonFile($"appsettings.{environmentName}.json", optional: false, reloadOnChange: false)
+            var builder = new ConfigurationBuilder().SetBasePath(Path.GetDirectoryName(path: GetType().GetTypeInfo().Assembly.Location))
+                    .AddJsonFile($"dbsetting.json", optional: false, reloadOnChange: false)
                     .Build()
-                    .GetConnectionString("DalSoftDbContext")
-            );
+                    .GetConnectionString("DefaultConnection");
+
+            optionsBuilder.UseSqlServer(builder);
         }
     }
 }

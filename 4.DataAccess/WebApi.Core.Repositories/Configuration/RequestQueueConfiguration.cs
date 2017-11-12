@@ -18,7 +18,7 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.SearchParameters)
                 .HasColumnName("SearchParameters")
-                .HasColumnType("nvarchar");
+                .HasColumnType("nvarchar(MAX)");
 
             builder.Property(x => x.IsRequestSucceed)
                 .HasColumnName("IsRequestSucceed")
@@ -27,7 +27,7 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.ErrorMessage)
                 .HasColumnName("ErrorMessage")
-                .HasColumnType("nvarchar");
+                .HasColumnType("nvarchar(MAX)");
         }
     }
 }

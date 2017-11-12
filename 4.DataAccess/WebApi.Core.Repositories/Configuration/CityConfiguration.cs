@@ -28,8 +28,7 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.CityName)
                 .HasColumnName("CityName")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(200)
+                .HasColumnType("nvarchar(200)")
                 .IsRequired();
 
             builder.Property(x => x.IsActive)

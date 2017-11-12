@@ -13,25 +13,23 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.Id)
                 .HasColumnName("ClaimId")
-                .HasColumnType("int")
+                .HasColumnType("bigint")
                 .ValueGeneratedNever()
                 .IsRequired();
 
             builder.Property(x => x.UserId)
                 .HasColumnName("UserId")
-                .HasColumnType("uniqueidentifier")
+                .HasColumnType("bigint")
                 .IsRequired();
 
             builder.Property(x => x.ClaimType)
                 .HasColumnName("ClaimType")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(500)
+                .HasColumnType("nvarchar(500)")
                 .IsRequired(false);
 
             builder.Property(x => x.ClaimValue)
                 .HasColumnName("ClaimValue")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(500)
+                .HasColumnType("nvarchar(500)")
                 .IsRequired(false);
 
             builder.HasOne(x => x.User)

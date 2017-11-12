@@ -24,7 +24,7 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.GeneratedHtml)
                 .HasColumnName("GeneratedHtml")
-                .HasColumnType("nvarchar");
+                .HasColumnType("nvarchar(MAX)");
 
             builder.Property(x => x.ReGenerationRequired)
                 .HasColumnName("ReGenerationRequired")
@@ -38,7 +38,7 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.ErrorMessage)
                 .HasColumnName("ErrorMessage")
-                .HasColumnType("nvarchar");
+                .HasColumnType("nvarchar(MAX)");
         }
     }
 }

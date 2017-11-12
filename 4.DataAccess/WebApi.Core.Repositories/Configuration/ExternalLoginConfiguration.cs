@@ -12,19 +12,17 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.LoginProvider)
                 .HasColumnName("LoginProvider")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(128)
+                .HasColumnType("nvarchar(128)")
                 .IsRequired();
 
             builder.Property(x => x.ProviderKey)
                 .HasColumnName("ProviderKey")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(128)
+                .HasColumnType("nvarchar(128)")
                 .IsRequired();
 
             builder.Property(x => x.UserId)
                 .HasColumnName("UserId")
-                .HasColumnType("uniqueidentifier")
+                .HasColumnType("bigint")
                 .IsRequired();
 
             builder.HasOne(x => x.User)

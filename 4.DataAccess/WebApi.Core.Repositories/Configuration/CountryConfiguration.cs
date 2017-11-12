@@ -19,14 +19,12 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.CountryCode)
                 .HasColumnName("CountryCode")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(256)
+                .HasColumnType("nvarchar(256)")
                 .IsRequired();
 
             builder.Property(x => x.CountryName)
                 .HasColumnName("CountryName")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(200)
+                .HasColumnType("nvarchar(200)")
                 .IsRequired();
 
             builder.Property(x => x.IsActive)

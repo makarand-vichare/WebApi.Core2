@@ -17,8 +17,7 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.Email)
                 .HasColumnName("Email")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(256);
+                .HasColumnType("nvarchar(256)");
 
             builder.Property(x => x.DateOfBirth)
                 .HasColumnName("BirthDate")
@@ -38,16 +37,15 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.PasswordHash)
                 .HasColumnName("PasswordHash")
-                .HasColumnType("nvarchar");
+                .HasColumnType("nvarchar(MAX)");
 
             builder.Property(x => x.SecurityStamp)
                 .HasColumnName("SecurityStamp")
-                .HasColumnType("nvarchar");
+                .HasColumnType("nvarchar(MAX)");
 
             builder.Property(x => x.UserName)
                 .HasColumnName("UserName")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(256)
+                .HasColumnType("nvarchar(256)")
                 .IsRequired();
 
             builder.HasMany(x => x.Claims)

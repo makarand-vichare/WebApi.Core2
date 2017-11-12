@@ -17,14 +17,12 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.KeyGroupCode)
                 .HasColumnName("KeyGroup")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(256)
+                .HasColumnType("nvarchar(256)")
                 .IsRequired();
 
             builder.Property(x => x.LocalizationKeys)
                 .HasColumnName("LocalizationKeys")
-                .HasColumnType("nvarchar")
-                .HasMaxLength(5000)
+                .HasColumnType("nvarchar(MAX)")
                 .IsRequired();
         }
     }

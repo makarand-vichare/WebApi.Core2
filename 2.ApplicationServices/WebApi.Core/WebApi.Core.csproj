@@ -22,8 +22,12 @@
     <ProjectReference Include="..\..\3.DomainServices\WebApi.Core.DomainServices\WebApi.Core.DomainServices.csproj" />
     <ProjectReference Include="..\..\3.DomainServices\WebApi.Core.IDomainServices\WebApi.Core.IDomainServices.csproj" />
     <ProjectReference Include="..\..\3.DomainServices\WebApi.Core.ViewModels\WebApi.Core.ViewModels.csproj" />
-    <ProjectReference Include="..\..\4.DataAccess\WebApi.Core.IRepositories\WebApi.Core.IRepositories.csproj" />
-    <ProjectReference Include="..\..\4.DataAccess\WebApi.Core.Repositories\WebApi.Core.Repositories.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.development.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
