@@ -1,0 +1,11 @@
+[
+  {
+    "AboutInfo": "auto entry",
+    "CityId": 1,
+    "CountryId": 1,
+    "BirthDate": "2001-12-12",
+    "Email": "admin@admin.com",
+    "Gender": 1,
+    "UserName": "Admin"
+  }
+]

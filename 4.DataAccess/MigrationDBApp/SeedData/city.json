@@ -1,0 +1,92 @@
+[
+  {
+    "CountryId": 1,
+    "CityName": "London",
+    "IsActive": true
+  },
+  {
+    "CountryId": 1,
+    "CityName": "York",
+    "IsActive": true
+  },
+  {
+    "CountryId": 1,
+    "CityName": "Manchester",
+    "IsActive": true
+  },
+  {
+    "CountryId": 1,
+    "CityName": "LiverPool",
+    "IsActive": true
+  },
+  {
+    "CountryId": 2,
+    "CityName": "Dublin",
+    "IsActive": true
+  },
+  {
+    "CountryId": 2,
+    "CityName": "Galway",
+    "IsActive": true
+  },
+  {
+    "CountryId": 2,
+    "CityName": "Limerick",
+    "IsActive": true
+  },
+  {
+    "CountryId": 3,
+    "CityName": "New york",
+    "IsActive": true
+  },
+  {
+    "CountryId": 3,
+    "CityName": "Chicago",
+    "IsActive": true
+  },
+  {
+    "CountryId": 3,
+    "CityName": "Los Angles",
+    "IsActive": true
+  },
+  {
+    "CountryId": 3,
+    "CityName": "New Jercy",
+    "IsActive": true
+  },
+  {
+    "CountryId": 3,
+    "CityName": "Boston",
+    "IsActive": true
+  },
+  {
+    "CountryId": 4,
+    "CityName": "Berlin",
+    "IsActive": true
+  },
+  {
+    "CountryId": 4,
+    "CityName": "Munich",
+    "IsActive": true
+  },
+  {
+    "CountryId": 4,
+    "CityName": "Hamberg",
+    "IsActive": true
+  },
+  {
+    "CountryId": 5,
+    "CityName": "Paris",
+    "IsActive": true
+  },
+  {
+    "CountryId": 5,
+    "CityName": "Nice",
+    "IsActive": true
+  },
+  {
+    "CountryId": 5,
+    "CityName": "Lyon",
+    "IsActive": true
+  }
+]

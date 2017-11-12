@@ -1,0 +1,21 @@
+[
+  {
+    "ClientId": "webApp",
+    "Active": true,
+    "AllowedOrigin": "http://localhost:50992",
+    "ApplicationType": "web",
+    "Name": "Web Application",
+    "RefreshTokenLifeTime": 7200,
+    "Secret": ""
+  },
+  {
+    "ClientId": "console",
+    "Active": true,
+    "AllowedOrigin": "*",
+    "ApplicationType": "console",
+    "Name": "Console Admin Application",
+    "RefreshTokenLifeTime": 7200,
+    "Secret": ""
+  }
+
+]

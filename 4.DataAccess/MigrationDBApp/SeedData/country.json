@@ -1,0 +1,42 @@
+[
+  {
+    "CountryCode": "GB",
+    "CountryName": "England",
+    "IsActive": true
+  },
+  {
+    "CountryCode": "IE",
+    "CountryName": "Ireland",
+    "IsActive": true
+  },
+  {
+    "CountryCode": "US",
+    "CountryName": "United States",
+    "IsActive": true
+  },
+  {
+    "CountryCode": "DE",
+    "CountryName": "Germany",
+    "IsActive": true
+  },
+  {
+    "CountryCode": "FR",
+    "CountryName": "France",
+    "IsActive": true
+  },
+  {
+    "CountryCode": "NE",
+    "CountryName": "Netherland",
+    "IsActive": true
+  },
+  {
+    "CountryCode": "SZ",
+    "CountryName": "Switerland",
+    "IsActive": true
+  },
+  {
+    "CountryCode": "CA",
+    "CountryName": "Canada",
+    "IsActive": true
+  }
+]
