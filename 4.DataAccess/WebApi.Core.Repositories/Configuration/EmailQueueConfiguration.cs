@@ -13,7 +13,7 @@ namespace WebApi.Core.Repositories.Configuration
             builder.Property(x => x.Id)
                 .HasColumnName("Id")
                 .HasColumnType("bigint")
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .IsRequired();
 
             builder.Property(x => x.FromEmailId)

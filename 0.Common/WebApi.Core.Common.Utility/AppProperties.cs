@@ -23,7 +23,7 @@
             }
             set
             {
-                AppMethods.AddCache(AppConstants.BasePhysicalPath, value);
+                AppMethods.AddCache(AppConstants.BasePhysicalPath);
             }
         }
 

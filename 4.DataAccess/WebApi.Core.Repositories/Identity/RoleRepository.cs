@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Core.IRepositories.Identity;
 using WebApi.Core.EntityModels.Identity;
-using WebApi.Core.IRepositories.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebApi.Core.Repositories.Identity

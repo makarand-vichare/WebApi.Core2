@@ -64,7 +64,7 @@ namespace WebApi.Core
             app.UseMvc();
         }
 
-        public IServiceProvider ConfigureIoC(IServiceCollection services)
+        private IServiceProvider ConfigureIoC(IServiceCollection services)
         {
             // var container = StructureMapConfig.RegisterComponents();
 

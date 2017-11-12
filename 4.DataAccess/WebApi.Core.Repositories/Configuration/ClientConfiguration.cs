@@ -18,7 +18,7 @@ namespace WebApi.Core.Repositories.Configuration
             builder.Property(x => x.Id)
                 .HasColumnName("Id")
                 .HasColumnType("bigint")
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .IsRequired();
 
             builder.Property(x => x.Secret)
@@ -33,7 +33,7 @@ namespace WebApi.Core.Repositories.Configuration
 
             builder.Property(x => x.ApplicationType)
                 .HasColumnName("ApplicationType")
-                .HasColumnType("int")
+                .HasColumnType("nvarchar(50)")
                 .IsRequired();
 
             builder.Property(x => x.Active)

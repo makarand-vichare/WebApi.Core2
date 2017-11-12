@@ -22,6 +22,8 @@ namespace WebApi.Core.Repositories.Core
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+
         public DbSet<ExternalLogin> Logins { get; set; }
         public DbSet<Claim> Claims { get; set; }
 
@@ -86,18 +88,20 @@ namespace WebApi.Core.Repositories.Core
             modelBuilder.ApplyConfiguration(new PdfQueueConfiguration());
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (optionsBuilder.IsConfigured) return;
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    //if (optionsBuilder.IsConfigured) return;
 
-            //Called by parameterless ctor Usually Migrations
+        //    ////Called by parameterless ctor Usually Migrations
+        //    //var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        //    //Console.WriteLine("mak" + environment);
+        //    //var builder = new ConfigurationBuilder().SetBasePath(Path.GetDirectoryName(path: GetType().GetTypeInfo().Assembly.Location))
+        //    //        .AddJsonFile($"appsettings.json", optional: false, reloadOnChange: false)
+        //    //        //.AddJsonFile($"appsettings.{environment}.json", optional: false)
+        //    //        .Build()
+        //    //        .GetConnectionString("DefaultConnection");
 
-            var builder = new ConfigurationBuilder().SetBasePath(Path.GetDirectoryName(path: GetType().GetTypeInfo().Assembly.Location))
-                    .AddJsonFile($"dbsetting.json", optional: false, reloadOnChange: false)
-                    .Build()
-                    .GetConnectionString("DefaultConnection");
-
-            optionsBuilder.UseSqlServer(builder);
-        }
+        //    //optionsBuilder.UseSqlServer(builder);
+        //}
     }
 }

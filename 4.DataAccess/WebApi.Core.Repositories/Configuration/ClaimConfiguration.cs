@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
 using WebApi.Core.EntityModels.Identity;
 
 namespace WebApi.Core.Repositories.Configuration
@@ -14,7 +13,7 @@ namespace WebApi.Core.Repositories.Configuration
             builder.Property(x => x.Id)
                 .HasColumnName("ClaimId")
                 .HasColumnType("bigint")
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .IsRequired();
 
             builder.Property(x => x.UserId)

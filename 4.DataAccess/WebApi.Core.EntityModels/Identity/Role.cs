@@ -1,5 +1,4 @@
 ﻿using WebApi.Core.EntityModels.Core;
-using System;
 using System.Collections.Generic;
 
 namespace WebApi.Core.EntityModels.Identity

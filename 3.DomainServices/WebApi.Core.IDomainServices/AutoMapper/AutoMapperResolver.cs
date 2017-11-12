@@ -49,13 +49,13 @@ namespace WebApi.Core.IDomainServices.AutoMapper
         }
     }
 
-    public class ApplicationTypeEnumResolver : IMemberValueResolver<Client, ClientViewModel, int , ApplicationTypes>
+    public class ApplicationTypeEnumResolver : IMemberValueResolver<Client, ClientViewModel, string , ApplicationTypes>
     {
-        public ApplicationTypes Resolve(Client source, ClientViewModel destination, int sourceMember, ApplicationTypes destMember, ResolutionContext context)
+        public ApplicationTypes Resolve(Client source, ClientViewModel destination, string sourceMember, ApplicationTypes destMember, ResolutionContext context)
         {
-            if (source.ApplicationType > 0)
+            if (!string.IsNullOrWhiteSpace(source.ApplicationType))
             {
-                return (ApplicationTypes)Enum.Parse(typeof(ApplicationTypes), source.ApplicationType.ToString());
+                return (ApplicationTypes)Enum.Parse(typeof(ApplicationTypes), source.ApplicationType);
             }
             else
             {
@@ -64,11 +64,11 @@ namespace WebApi.Core.IDomainServices.AutoMapper
         }
     }
 
-    public class ApplicationTypeIntResolver : IMemberValueResolver<ClientViewModel, Client, ApplicationTypes, int>
+    public class ApplicationTypeIntResolver : IMemberValueResolver<ClientViewModel, Client, ApplicationTypes, string>
     {
-        public int Resolve(ClientViewModel source, Client destination, ApplicationTypes sourceMember, int destMember, ResolutionContext context)
+        public string Resolve(ClientViewModel source, Client destination, ApplicationTypes sourceMember, string destMember, ResolutionContext context)
         {
-            return (int)source.ApplicationType;
+            return source.ApplicationType.ToString();
         }
     }
 

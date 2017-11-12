@@ -35,7 +35,7 @@ namespace WebApi.Core.IDomainServices.AutoMapper
 
 
            CreateMap<Client, ClientViewModel>()
-                .ForMember(dest => dest.ApplicationType, opt => opt.ResolveUsing<ApplicationTypeEnumResolver, int>(src => src.ApplicationType));
+                .ForMember(dest => dest.ApplicationType, opt => opt.ResolveUsing<ApplicationTypeEnumResolver, string>(src => src.ApplicationType));
 
            CreateMap<ClientViewModel, Client>()
                             .ForMember(dest => dest.ApplicationType, opt => opt.ResolveUsing<ApplicationTypeIntResolver, ApplicationTypes>(src => src.ApplicationType));

@@ -29,11 +29,11 @@ namespace WebApi.Core.Utility
 
         public static string SerializeToXml<T>(T obj)
         {
-            string result = string.Empty;
+            var result = string.Empty;
             try
             {
-                XmlSerializer ser = new XmlSerializer(typeof(T));
-                StringWriter writer = new StringWriter();
+                var ser = new XmlSerializer(typeof(T));
+                var writer = new StringWriter();
                 ser.Serialize(writer, obj);
                 result = writer.ToString();
                 writer.Close();
@@ -48,7 +48,7 @@ namespace WebApi.Core.Utility
         public static T DeserializeFromXml<T>(string xml)
         {
             T result;
-            XmlSerializer ser = new XmlSerializer(typeof(T));
+            var ser = new XmlSerializer(typeof(T));
             using (TextReader tr = new StringReader(xml))
             {
                 result = (T)ser.Deserialize(tr);
@@ -82,25 +82,28 @@ namespace WebApi.Core.Utility
 
         public static string TransformXmlToHtml(string inputXml, string xsltFilePath)
         {
-            string result = string.Empty;
+            var result = string.Empty;
             try
             {
-                StringWriter stringWriter = new StringWriter();
-
-                XslCompiledTransform xslCompiledTransform = new XslCompiledTransform();
-                XsltSettings settings = new XsltSettings();
-                settings.EnableScript = true;
-
-                xslCompiledTransform.Load(xsltFilePath, settings, null);
-
-                XPathDocument doc = new XPathDocument(new StringReader(inputXml));
-
-                using (StringWriter sw = new StringWriter())
+                using (StringWriter stringWriter = new StringWriter())
                 {
-                    xslCompiledTransform.Transform(doc, null, sw);
-                    result = sw.ToString();
+                    var xslCompiledTransform = new XslCompiledTransform();
+                    var settings = new XsltSettings
+                    {
+                        EnableScript = true
+                    };
+
+                    xslCompiledTransform.Load(xsltFilePath, settings, null);
+
+                    var doc = new XPathDocument(new StringReader(inputXml));
+
+                    using (StringWriter sw = new StringWriter())
+                    {
+                        xslCompiledTransform.Transform(doc, null, sw);
+                        result = sw.ToString();
+                    }
+                    return result;
                 }
-                return result;
 
             }
             catch (Exception ex)
@@ -143,29 +146,34 @@ namespace WebApi.Core.Utility
                 p.Start();
                 //log.Info("pdf Generation Started.");
 
-                stdin = new StreamWriter(p.StandardInput.BaseStream, Encoding.UTF8);
-                stdin.AutoFlush = true;
-                stdin.Write(htmlData);
-                stdin.Close();
-                //log.Info("pdf Generated.");
+                using (
+                //log.Info("pdf Generation Started.");
 
-                // read the output here...
-                var output = p.StandardOutput.ReadToEnd();
-                var errorOutput = p.StandardError.ReadToEnd();
+                stdin = new StreamWriter(p.StandardInput.BaseStream, Encoding.UTF8))
+                {
+                    stdin.AutoFlush = true;
+                    stdin.Write(htmlData);
+                    stdin.Close();
+                    //log.Info("pdf Generated.");
 
-                // ...then wait n milliseconds for exit (as after exit, it can't read the output)
-                p.WaitForExit(60000);
+                    // read the output here...
+                    var output = p.StandardOutput.ReadToEnd();
+                    var errorOutput = p.StandardError.ReadToEnd();
 
-                // read the exit code, close process
-                int returnCode = p.ExitCode;
-                p.Close();
-                p.Dispose();
-                p.Refresh();
-                // if 0 or 2, it worked so return path of pdf
-                if ((returnCode == 0) || (returnCode == 2))
-                    return outputFilename;
-                else
-                    throw new Exception(errorOutput);
+                    // ...then wait n milliseconds for exit (as after exit, it can't read the output)
+                    p.WaitForExit(60000);
+
+                    // read the exit code, close process
+                    int returnCode = p.ExitCode;
+                    p.Close();
+                    p.Dispose();
+                    p.Refresh();
+                    // if 0 or 2, it worked so return path of pdf
+                    if ((returnCode == 0) || (returnCode == 2))
+                        return outputFilename;
+                    else
+                        throw new Exception(errorOutput);
+                }
             }
             catch (Exception exc)
             {
@@ -185,12 +193,14 @@ namespace WebApi.Core.Utility
             }
         }
 
-        public static void AddCache(string key,object value)
+        public static void AddCache(string key)
         {
             try
             {
-                var cacheEntryOptions = new MemoryCacheEntryOptions();
-                cacheEntryOptions.AbsoluteExpiration = DateTimeOffset.Now.AddHours(1.0);
+                var cacheEntryOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpiration = DateTimeOffset.Now.AddHours(1.0)
+                };
 
                 if (!cache.TryGetValue(key, out object result))
                 {
@@ -212,13 +222,14 @@ namespace WebApi.Core.Utility
 
         public static string GetHash(string input)
         {
-            HashAlgorithm hashAlgorithm = new SHA256CryptoServiceProvider();
+            using (HashAlgorithm hashAlgorithm = new SHA256CryptoServiceProvider())
+            {
+                var byteValue = System.Text.Encoding.UTF8.GetBytes(input);
 
-            byte[] byteValue = System.Text.Encoding.UTF8.GetBytes(input);
+                var byteHash = hashAlgorithm.ComputeHash(byteValue);
 
-            byte[] byteHash = hashAlgorithm.ComputeHash(byteValue);
-
-            return Convert.ToBase64String(byteHash);
+                return Convert.ToBase64String(byteHash);
+            }
         }
     }
 }

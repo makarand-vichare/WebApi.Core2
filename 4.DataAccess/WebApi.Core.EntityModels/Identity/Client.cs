@@ -17,7 +17,7 @@ namespace WebApi.Core.EntityModels.Identity
         //[MaxLength(100)]
         public string Name { get; set; }
 
-        public int ApplicationType { get; set; }
+        public string ApplicationType { get; set; }
         public bool Active { get; set; }
         public int RefreshTokenLifeTime { get; set; }
 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using WebApi.Core.ViewModels.Core;
 
 namespace WebApi.Core.ViewModels.Identity.WebApi
 {

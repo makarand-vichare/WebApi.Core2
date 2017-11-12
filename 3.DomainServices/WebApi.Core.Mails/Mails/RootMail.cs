@@ -1,13 +1,8 @@
 using System;
-using System.ComponentModel;
 using System.IO;
-using System.Net;
-using System.Net.Mail;
-using System.Linq;
 using StructureMap.Attributes;
 using WebApi.Core.IDomainServices.Queues;
 using WebApi.Core.Utility;
-using WebApi.Core.ViewModels;
 
 namespace WebApi.Core.Mails
 {
