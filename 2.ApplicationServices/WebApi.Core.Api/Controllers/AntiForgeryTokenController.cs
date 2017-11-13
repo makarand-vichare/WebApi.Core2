@@ -4,7 +4,7 @@ using System.Net.Http;
 
 namespace WebApi.Core.Controllers
 {
-    [Route("api/Antiforgerytoken")]
+    [Route("api/[controller]")]
     public class AntiForgeryTokenController : BaseController
     {
 

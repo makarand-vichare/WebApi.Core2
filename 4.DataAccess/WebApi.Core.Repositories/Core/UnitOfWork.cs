@@ -1,4 +1,5 @@
-﻿using StructureMap.Attributes;
+﻿using Microsoft.Extensions.Configuration;
+using StructureMap.Attributes;
 using System;
 using System.Threading.Tasks;
 using WebApi.Core.EntityModels.Core;
@@ -7,6 +8,7 @@ using WebApi.Core.IRepositories.Identity;
 using WebApi.Core.IRepositories.Localization;
 using WebApi.Core.IRepositories.Location;
 using WebApi.Core.IRepositories.Queues;
+using WebApi.Core.Repositories.Extensions;
 
 namespace WebApi.Core.Repositories.Core
 {
@@ -37,7 +39,7 @@ namespace WebApi.Core.Repositories.Core
 
         public UnitOfWork()
         {
-            this.dataContext = new DataContext();
+            this.dataContext = new DataContext(DesignTimeDbContextFactory.GetDbContextOptions());
         }
 
         #endregion

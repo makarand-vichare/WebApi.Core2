@@ -5,9 +5,10 @@ using System.IO;
 
 namespace WebApi.Core.Controllers
 {
+    [Route("api/[controller]")]
     public class FileUploadController : BaseController
     {
-        [HttpPost()]
+        [HttpPost]
         public string UploadFiles()
         {
             int iUploadedCnt = 0;

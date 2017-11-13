@@ -7,7 +7,7 @@ using WebApi.Core.IDomainServices.IdentityStores;
 
 namespace WebApi.Core.Controllers
 {
-    [Route("api/RefreshTokens")]
+    [Route("api/[controller]")]
     public class RefreshTokensController : BaseController
     {
 
@@ -19,15 +19,16 @@ namespace WebApi.Core.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [Route("")]
-        public IActionResult Get()
+        [Route("antiforgerytokens")]
+        [HttpGet]
+        public IActionResult GetAll()
         {
             return Ok(refreshTokenService.GetAllRefreshTokens());
         }
 
-        //[Authorize(Users = "Admin")]
+        [Authorize(Roles = "Admin")]
         [AllowAnonymous]
-        [Route("")]
+        [HttpDelete]
         public async Task<IActionResult> Delete(string tokenId)
         {
             var result = await refreshTokenService.RemoveRefreshToken(tokenId);
@@ -41,7 +42,7 @@ namespace WebApi.Core.Controllers
 
         [HttpGet]
         [Route("antiforgerytoken")]
-        public HttpResponseMessage GetAntiForgeryToken()
+        public HttpResponseMessage Get()
         {
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
             //HttpCookie cookie = HttpContext.Current.Request.Cookies[AppConstants.XsrfCookie];

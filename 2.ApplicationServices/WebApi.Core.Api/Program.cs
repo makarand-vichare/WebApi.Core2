@@ -26,6 +26,7 @@ namespace WebApi.Core
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .UseIISIntegration()
                 .UseNLog() // NLog: setup NLog for Dependency injection
                 .Build();
     }

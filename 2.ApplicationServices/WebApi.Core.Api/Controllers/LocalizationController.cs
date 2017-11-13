@@ -6,7 +6,7 @@ using WebApi.Core.IDomainServices.Services;
 
 namespace WebApi.Core.Controllers
 {
-    [Route("api/Localizations")]
+    [Route("api/[controller]")]
     public class LocalizationController : BaseController
     {
         private readonly ILocalizationService localizationService;

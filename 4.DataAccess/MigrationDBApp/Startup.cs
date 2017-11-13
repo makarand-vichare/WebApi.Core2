@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.IO;
 using WebApi.Core.Repositories.Core;
 
@@ -12,9 +13,7 @@ namespace MigrationDBApp
 
         public Startup()
         {
-            Configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();
-
-            var environmentName = Configuration["ASPNETCORE_ENVIRONMENT"];
+            var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
             Configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false)

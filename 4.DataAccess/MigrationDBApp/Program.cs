@@ -26,17 +26,17 @@ namespace MigrationDBApp
             NLogLogger.Instance.Log("App Init completed");
             Console.WriteLine("Initialization completed .. checking migrations data ...");
 
-            if (!serviceProvider.GetService<DataContext>().AllMigrationsApplied())
-            {
+            //if (!serviceProvider.GetService<DataContext>().AllMigrationsApplied())
+            //{
                 Console.WriteLine("Applying pending migrations changes");
                 serviceProvider.GetService<DataContext>().Database.Migrate();
                 Console.WriteLine("Applying seed data.");
                 serviceProvider.GetService<DataContext>().EnsureSeeded();
-            }
-            else
-            {
-                Console.WriteLine("Migrations is uptodate.");
-            }
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Migrations is uptodate.");
+            //}
 
             Console.WriteLine("Migrations is done. please enter a key for exist");
             Console.ReadLine();

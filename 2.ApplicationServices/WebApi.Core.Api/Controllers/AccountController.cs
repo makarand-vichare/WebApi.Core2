@@ -17,7 +17,7 @@ namespace WebApi.Core.Controllers
     /// </summary>
 
     [Authorize]
-    [Route("api/Account")]
+    [Route("api/[controller]")]
     public class AccountController : BaseController
     {
         private UserManager<IdentityUserViewModel> userManager;
@@ -220,15 +220,15 @@ namespace WebApi.Core.Controllers
 
         //}
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                userManager.Dispose();
-            }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        userManager.Dispose();
+        //    }
 
-            base.Dispose(disposing);
-        }
+        //    base.Dispose(disposing);
+        //}
 
         #region Helpers
 

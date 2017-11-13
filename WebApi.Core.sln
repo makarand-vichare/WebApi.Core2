@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2002
+VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.ApplicationServices", "2.ApplicationServices", "{31AF082C-3A54-4285-8264-4578EE2CA971}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Core", "2.ApplicationServices\WebApi.Core\WebApi.Core.csproj", "{DEFE728B-635F-4F87-A003-38D4EBDE501E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0.Common", "0.Common", "{D7088009-6669-4EC7-A79D-1A09B59E0178}"
 EndProject
@@ -37,7 +35,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.Infrastructure", "1.Infra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Core.Infrastructure", "1.InfraStructure\WebApi.Core.Infrastructure\WebApi.Core.Infrastructure.csproj", "{83B72B76-082C-4FD8-9999-32309E851F20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MigrationDBApp", "4.DataAccess\MigrationDBApp\MigrationDBApp.csproj", "{C287C4CB-0F88-496C-8CDB-B56B8DA97190}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MigrationDBApp", "4.DataAccess\MigrationDBApp\MigrationDBApp.csproj", "{C287C4CB-0F88-496C-8CDB-B56B8DA97190}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Core.Api", "2.ApplicationServices\WebApi.Core.Api\WebApi.Core.Api.csproj", "{393B8149-98EB-44F2-AFF2-56F46E7C0131}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiJwtExample", "2.ApplicationServices\WebApiJwtExample-master\WebApiJwtExample-master\WebApiJwtExample.csproj", "{85C6CE82-DCDF-4740-B0BC-C38672BA142D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,10 +47,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DEFE728B-635F-4F87-A003-38D4EBDE501E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DEFE728B-635F-4F87-A003-38D4EBDE501E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DEFE728B-635F-4F87-A003-38D4EBDE501E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DEFE728B-635F-4F87-A003-38D4EBDE501E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1FDED125-0223-4EED-B2DB-51485965ABF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1FDED125-0223-4EED-B2DB-51485965ABF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FDED125-0223-4EED-B2DB-51485965ABF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -97,12 +95,19 @@ Global
 		{C287C4CB-0F88-496C-8CDB-B56B8DA97190}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C287C4CB-0F88-496C-8CDB-B56B8DA97190}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C287C4CB-0F88-496C-8CDB-B56B8DA97190}.Release|Any CPU.Build.0 = Release|Any CPU
+		{393B8149-98EB-44F2-AFF2-56F46E7C0131}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{393B8149-98EB-44F2-AFF2-56F46E7C0131}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{393B8149-98EB-44F2-AFF2-56F46E7C0131}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{393B8149-98EB-44F2-AFF2-56F46E7C0131}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85C6CE82-DCDF-4740-B0BC-C38672BA142D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85C6CE82-DCDF-4740-B0BC-C38672BA142D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85C6CE82-DCDF-4740-B0BC-C38672BA142D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85C6CE82-DCDF-4740-B0BC-C38672BA142D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{DEFE728B-635F-4F87-A003-38D4EBDE501E} = {31AF082C-3A54-4285-8264-4578EE2CA971}
 		{1FDED125-0223-4EED-B2DB-51485965ABF4} = {D7088009-6669-4EC7-A79D-1A09B59E0178}
 		{F1A9111A-2D02-49CA-9898-82C56D9616FB} = {D7088009-6669-4EC7-A79D-1A09B59E0178}
 		{CA55DFE7-D2CC-474C-89B2-D624A2706350} = {FCF06FFC-DF1B-43C4-A9FB-6E947D0188B1}
@@ -115,6 +120,8 @@ Global
 		{F6459134-8EA7-4508-B511-F27FD32BBCAD} = {6977E6F4-A008-4557-855F-EC0A61802BE4}
 		{83B72B76-082C-4FD8-9999-32309E851F20} = {ED99833B-5B0A-4A41-80F3-28C06F90A07D}
 		{C287C4CB-0F88-496C-8CDB-B56B8DA97190} = {6977E6F4-A008-4557-855F-EC0A61802BE4}
+		{393B8149-98EB-44F2-AFF2-56F46E7C0131} = {31AF082C-3A54-4285-8264-4578EE2CA971}
+		{85C6CE82-DCDF-4740-B0BC-C38672BA142D} = {31AF082C-3A54-4285-8264-4578EE2CA971}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DB03C114-3B8B-4506-B3C2-4E2F1C5147DE}

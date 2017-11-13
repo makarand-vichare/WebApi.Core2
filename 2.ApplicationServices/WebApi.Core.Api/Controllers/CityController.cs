@@ -6,23 +6,23 @@ using WebApi.Core.IDomainServices.Services;
 
 namespace WebApi.Core.Controllers
 {
-    [Route("api/Country")]
-    public class CountryController : BaseController
+    [Route("api/[controller]")]
+    public class CityController : BaseController
     {
-        private readonly ICountryService countryService;
+        private readonly ICityService cityService;
 
-        public CountryController(ICountryService countryService)
+        public CityController(ICityService cityService)
         {
-            this.countryService = countryService;
+            this.cityService = cityService;
         }
 
-        [Route("GetCountries")]
+        [Route("GetCities")]
         [HttpGet]
-        public IActionResult GetCountries()
+        public IActionResult GetCities(long countryId)
         {
             try
             {
-                var lookupList = countryService.GetLookup();
+                var lookupList = cityService.GetLookup(countryId);
                 return Request.CreateResponse(HttpStatusCode.OK, lookupList);
             }
             catch(Exception ex)

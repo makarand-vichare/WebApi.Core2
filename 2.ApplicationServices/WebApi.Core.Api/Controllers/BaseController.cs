@@ -6,7 +6,7 @@ namespace WebApi.Core.Controllers
 {
     //[Produces("application/json")]
     [Route("api/Base")]
-    public class BaseController : Controller
+    public abstract class BaseController : ControllerBase
     {
         [SetterProperty]
         public ILogger AppLogger { get; set; }
