@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using WebApi.Core.ViewModels.Identity.WebApi;
 
 namespace WebApi.Core.Api.Controllers
 {
@@ -11,6 +13,15 @@ namespace WebApi.Core.Api.Controllers
     [Route("/token")]
     public class TokenController : Controller
     {
+        private UserManager<IdentityUserViewModel> userManager;
+        private SignInManager<IdentityUserViewModel> signInManager;
+
+        public TokenController(UserManager<IdentityUserViewModel> _userManager,
+            SignInManager<IdentityUserViewModel> _signInManager)
+        {
+            this.userManager = _userManager;
+            this.signInManager = _signInManager;
+        }
         [HttpPost]
         public IActionResult Create(string username, string password)
         {
@@ -21,7 +32,14 @@ namespace WebApi.Core.Api.Controllers
 
         private bool IsValidUserAndPasswordCombination(string username, string password)
         {
-            return !string.IsNullOrEmpty(username) && username == password;
+            var result = userManager.FindByNameAsync(username).Result;
+            if(result == null)
+            {
+                return false;
+            }
+
+            var passwordSignInResult = signInManager.PasswordSignInAsync(username, password, isPersistent: false, lockoutOnFailure: false).Result;
+            return passwordSignInResult.Succeeded;
         }
 
         private string GenerateToken(string username)

@@ -14,7 +14,7 @@ namespace WebApi.Core
     public class Startup
     {
         private readonly IHostingEnvironment hostingEnvironment;
-
+        //string _testSecret = null;
         public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
@@ -23,6 +23,11 @@ namespace WebApi.Core
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables();
+
+            if (env.IsDevelopment())
+            {
+                builder.AddUserSecrets<Startup>();
+            }
 
             Configuration = builder.Build();
             hostingEnvironment = env;
@@ -33,19 +38,21 @@ namespace WebApi.Core
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            //services.AddAuthentication().AddFacebook(facebookOptions =>
-            //{
-            //    facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
-            //    facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-            //});
-
-            //services.AddAuthentication().AddGoogle(googleOptions =>
-            //{
-            //    googleOptions.ClientId = Configuration["Authentication:Facebook:ClientId"];
-            //    googleOptions.ClientSecret = Configuration["Authentication:Facebook:ClientSecret"];
-            //});
+            //_testSecret = Configuration["MySecret"];
 
             services.AddMvc();
+
+            services.AddAuthentication().AddFacebook(facebookOptions =>
+            {
+                facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+                facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+            });
+
+            services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
+                googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+            });
 
             services.AddAuthentication(options =>
             {
@@ -109,6 +116,8 @@ namespace WebApi.Core
             }
 
             app.UseMvc();
+
+            //var result = string.IsNullOrEmpty(_testSecret) ? "Null" : "Not Null";
 
             app.Run(async (context) =>
             {
