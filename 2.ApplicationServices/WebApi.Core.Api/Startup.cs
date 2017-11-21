@@ -42,6 +42,8 @@ namespace WebApi.Core
 
             services.AddMvc();
 
+            services.AddApiVersioning();
+
             services.AddAuthentication().AddFacebook(facebookOptions =>
             {
                 facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
